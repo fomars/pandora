@@ -13,14 +13,14 @@ import (
 var _ = Describe("Decoder", func() {
 	It("should parse header with tag", func() {
 		raw := "123 tag"
-		reqSize, tag, err := decodeHeader([]byte(raw))
+		reqSize, tag, err := DecodeHeader([]byte(raw))
 		Expect(err).To(BeNil())
 		Expect(reqSize).To(Equal(123))
 		Expect(tag).To(Equal("tag"))
 	})
 	It("should parse header without tag", func() {
 		raw := "123"
-		reqSize, tag, err := decodeHeader([]byte(raw))
+		reqSize, tag, err := DecodeHeader([]byte(raw))
 		Expect(err).To(BeNil())
 		Expect(reqSize).To(Equal(123))
 		Expect(tag).To(Equal(""))
@@ -101,13 +101,13 @@ var _ = Describe("Decoder", func() {
 		Expect(err).To(BeNil())
 		Expect(req.Host).To(Equal(host))
 		Expect(req.URL.Host).To(Equal(host))
-		decodedConfigHeaders, _ := decodeHTTPConfigHeaders(configHeaders)
+		decodedConfigHeaders, _ := DecodeHTTPConfigHeaders(configHeaders)
 		for _, header := range decodedConfigHeaders {
 			// special behavior for `Host` header
-			if header.key == "Host" {
-				req.URL.Host = header.value
+			if header.Key == "Host" {
+				req.URL.Host = header.Value
 			} else {
-				req.Header.Set(header.key, header.value)
+				req.Header.Set(header.Key, header.Value)
 			}
 		}
 		Expect(req.URL.Host).To(Equal(newhost))

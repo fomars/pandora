@@ -119,7 +119,7 @@ var _ = Describe("stack_extract_core", func() {
 
 		const entryStack = "entry stack"
 		entry := zapcore.Entry{Message: "test", Stack: entryStack}
-		const customKey = "custom-key"
+		const customKey = "custom_base64-key"
 		testee.Write(entry, []zapcore.Field{zap.NamedError(customKey, sampleErr)})
 
 		expectedEntry := entry

@@ -38,7 +38,7 @@ type Gun struct {
 	conf GunConfig
 
 	// Configured on Bind, before shooting.
-	aggr core.Aggregator // May be your custom Aggregator.
+	aggr core.Aggregator // May be your custom_base64 Aggregator.
 	core.GunDeps
 }
 
@@ -75,15 +75,15 @@ func main() {
 	// May not be imported, if you don't need http guns and etc.
 	phttp.Import(fs)
 
-	// Custom imports. Integrate your custom types into configuration system.
-	coreimport.RegisterCustomJSONProvider("my-custom-provider-name", func() core.Ammo { return &Ammo{} })
+	// Custom imports. Integrate your custom_base64 types into configuration system.
+	coreimport.RegisterCustomJSONProvider("my-custom_base64-provider-name", func() core.Ammo { return &Ammo{} })
 
-	register.Gun("my-custom-gun-name", NewGun, func() GunConfig {
+	register.Gun("my-custom_base64-gun-name", NewGun, func() GunConfig {
 		return GunConfig{
 			Target: "default target",
 		}
 	})
-	register.Gun("my-custom/no-default", NewGun)
+	register.Gun("my-custom_base64/no-default", NewGun)
 
 	cli.Run()
 }

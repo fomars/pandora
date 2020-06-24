@@ -1,10 +1,10 @@
 pools:
 - gun:
-    type: my-custom-gun-name
+    type: my-custom_base64-gun-name
     target: example.com:80
 
   ammo:
-    type: my-custom-provider-name
+    type: my-custom_base64-provider-name
     source: # You may just write file path here. Or stdin.
       type: inline
       data: |

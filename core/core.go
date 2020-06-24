@@ -4,7 +4,7 @@
 // Author: Vladimir Skipor <skipor@yandex-team.ru>
 
 // package core defines pandora engine extension points.
-// Core interfaces implementations MAY be used for custom engine creation and using as a library,
+// Core interfaces implementations MAY be used for custom_base64 engine creation and using as a library,
 // or MAY be registered in pandora plugin system (look at core/plugin package), for creating engine
 // from abstract config.
 //

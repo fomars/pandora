@@ -43,3 +43,5 @@ require (
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/yaml.v2 v2.0.0 // indirect
 )
+
+go 1.13

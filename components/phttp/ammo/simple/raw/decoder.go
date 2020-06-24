@@ -11,11 +11,11 @@ import (
 )
 
 type Header struct {
-	key   string
-	value string
+	Key   string
+	Value string
 }
 
-func decodeHeader(headerString []byte) (reqSize int, tag string, err error) {
+func DecodeHeader(headerString []byte) (reqSize int, tag string, err error) {
 	parts := strings.SplitN(string(headerString), " ", 2)
 	reqSize, err = strconv.Atoi(parts[0])
 	if len(parts) > 1 {
@@ -36,7 +36,7 @@ func decodeRequest(reqString []byte) (req *http.Request, err error) {
 	return
 }
 
-func decodeHTTPConfigHeaders(headers []string) (configHTTPHeaders []Header, err error) {
+func DecodeHTTPConfigHeaders(headers []string) (configHTTPHeaders []Header, err error) {
 	for _, header := range headers {
 		line := []byte(header)
 		if len(line) < 3 || line[0] != '[' || line[len(line)-1] != ']' {

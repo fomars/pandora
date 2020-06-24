@@ -44,7 +44,7 @@ func newValidator() *validator.Validate {
 	return validate
 }
 
-// RegisterCustom used to set custom validation check hooks on specific types,
+// RegisterCustom used to set custom_base64 validation check hooks on specific types,
 // that will be called on such type validation, even if it is nested field.
 func RegisterCustom(v CustomValidation, types ...interface{}) (_ struct{}) {
 	if len(types) < 1 {
