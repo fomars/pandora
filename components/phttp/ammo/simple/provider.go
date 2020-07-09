@@ -21,8 +21,8 @@ func NewProvider(fs afero.Fs, fileName string, start func(ctx context.Context, f
 		fs:       fs,
 		fileName: fileName,
 		start:    start,
-		Sink:     make(chan *Ammo, 128),
-		Pool:     sync.Pool{New: func() interface{} { return &Ammo{} }},
+		Sink:     make(chan *BaseAmmo, 128),
+		Pool:     sync.Pool{New: func() interface{} { return &HttpAmmo{} }},
 	}
 }
 
@@ -30,7 +30,7 @@ type Provider struct {
 	fs        afero.Fs
 	fileName  string
 	start     func(ctx context.Context, file afero.File) error
-	Sink      chan *Ammo
+	Sink      chan *BaseAmmo
 	Pool      sync.Pool
 	idCounter atomic.Int64
 	core.ProviderDeps

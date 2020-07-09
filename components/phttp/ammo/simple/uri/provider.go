@@ -59,7 +59,7 @@ func (p *Provider) start(ctx context.Context, ammoFile afero.File) error {
 			if len(data) == 0 {
 				continue // skip empty lines
 			}
-			err := p.decoder.Decode(data)
+			err := p.decoder.Decode(data)  //TODO: This one actually puts ammo into Sink. This is horribly misleading
 			if err != nil {
 				return errors.Wrapf(err, "failed to decode ammo at line: %v; data: %q", line, data)
 			}

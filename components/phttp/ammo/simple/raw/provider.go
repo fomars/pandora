@@ -13,7 +13,7 @@ import (
 
 /*
 Parses size-prefixed HTTP ammo files. Each ammo is prefixed with a header line (delimited with \n), which consists of
-two fields delimited by a space: ammo size and tag. Ammo size is in bytes (integer, including special characters like CR, LF).
+two fields delimited by a space: ammo size and tag. HttpAmmo size is in bytes (integer, including special characters like CR, LF).
 Tag is a string. Example:
 
 77 bad
@@ -118,7 +118,7 @@ func (p *Provider) start(ctx context.Context, ammoFile afero.File) error {
 				}
 			}
 
-			sh := p.Pool.Get().(*simple.Ammo)
+			sh := p.Pool.Get().(*simple.HttpAmmo)
 			sh.Reset(req, tag)
 
 			select {

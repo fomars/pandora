@@ -19,7 +19,7 @@ import (
 
 type decoder struct {
 	ctx  context.Context
-	sink chan<- *simple.Ammo
+	sink chan<- *simple.HttpAmmo
 	pool *sync.Pool
 
 	ammoNum       int
@@ -32,7 +32,7 @@ type ConfigHeader struct {
 	value string
 }
 
-func newDecoder(ctx context.Context, sink chan<- *simple.Ammo, pool *sync.Pool) *decoder {
+func newDecoder(ctx context.Context, sink chan<- *simple.HttpAmmo, pool *sync.Pool) *decoder {
 	return &decoder{
 		sink:   sink,
 		header: http.Header{},
@@ -50,7 +50,7 @@ func (d *decoder) Decode(line []byte) error {
 	line = bytes.TrimSpace(line)
 	switch line[0] {
 	case '/':
-		return d.decodeURI(line)
+		return d.decodeURI(line) // TODO: This one actually puts ammo into Sink. This is horribly misleading
 	case '[':
 		return d.decodeHeader(line)
 	}
@@ -87,7 +87,7 @@ func (d *decoder) decodeURI(line []byte) error {
 		}
 	}
 
-	sh := d.pool.Get().(*simple.Ammo)
+	sh := d.pool.Get().(*simple.HttpAmmo)
 	sh.Reset(req, tag)
 	select {
 	case d.sink <- sh:

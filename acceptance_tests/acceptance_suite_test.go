@@ -50,7 +50,7 @@ type TestConfig struct {
 	ConfigName string            // Without extension. "load" by default.
 	UseJSON    bool              // Using YAML by default.
 	CmdArgs    []string          // Nothing by default.
-	Files      map[string]string // Extra files to put in dir. Ammo, etc.
+	Files      map[string]string // Extra files to put in dir. HttpAmmo, etc.
 }
 
 func NewTestConfig() *TestConfig {

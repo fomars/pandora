@@ -37,7 +37,7 @@ var _ = Describe("BaseGun", func() {
 		const host = "example.com"
 		const path = "/smth"
 		expectedReq, err := http.NewRequest("GET", "http://"+host+path, nil)
-		expectedReq.Host = "" // Important. Ammo may have empty host.
+		expectedReq.Host = "" // Important. HttpAmmo may have empty host.
 		Expect(err).To(BeNil())
 		var actualReq *http.Request
 		server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {

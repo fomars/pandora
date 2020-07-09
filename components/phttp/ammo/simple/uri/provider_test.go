@@ -95,7 +95,7 @@ var _ = Describe("provider decode", func() {
 		provider *Provider
 		cancel   context.CancelFunc
 		errch    chan error
-		ammos    []*simple.Ammo
+		ammos    []*simple.HttpAmmo
 	)
 
 	BeforeEach(func() {
@@ -118,7 +118,7 @@ var _ = Describe("provider decode", func() {
 			By(fmt.Sprint(i))
 			am, ok := provider.Acquire()
 			Expect(ok).To(BeTrue())
-			ammos = append(ammos, am.(*simple.Ammo))
+			ammos = append(ammos, am.(*simple.HttpAmmo))
 		}
 	})
 

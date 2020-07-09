@@ -14,9 +14,9 @@ import (
 
 //go:generate mockery -name=Ammo -case=underscore -outpkg=ammomock
 
-// Ammo ammo interface for http based guns.
-// http ammo providers should produce ammo that implements Ammo.
-// http guns should use convert ammo to Ammo, not to specific implementation.
+// HttpAmmo ammo interface for http based guns.
+// http ammo providers should produce ammo that implements HttpAmmo.
+// http guns should use convert ammo to HttpAmmo, not to specific implementation.
 // Returned request have
 type Ammo interface {
 	// TODO(skipor): instead of sample use it wrapper with httptrace and more usable interface.

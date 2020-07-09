@@ -87,7 +87,7 @@ func (i *instance) shoot(ctx context.Context) (err error) {
 			break
 		}
 		if tag.Debug {
-			i.log.Debug("Ammo acquired", zap.Any("ammo", ammo))
+			i.log.Debug("HttpAmmo acquired", zap.Any("ammo", ammo))
 		}
 		if !waiter.Wait() {
 			break

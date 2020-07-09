@@ -127,7 +127,7 @@ var _ = Describe("provider decode", func() {
 		provider *Provider
 		cancel   context.CancelFunc
 		errch    chan error
-		ammos    []*simple.Ammo
+		ammos    []*simple.HttpAmmo
 	)
 
 	BeforeEach(func() {
@@ -149,7 +149,7 @@ var _ = Describe("provider decode", func() {
 		for i := 0; i < successReceives; i++ {
 			am, ok := provider.Acquire()
 			Expect(ok).To(BeTrue())
-			ammos = append(ammos, am.(*simple.Ammo))
+			ammos = append(ammos, am.(*simple.HttpAmmo))
 		}
 	}, 1)
 
@@ -223,16 +223,16 @@ func Benchmark(b *testing.B) {
 	jsonDoc, err := json.Marshal(testData[0])
 	Expect(err).To(BeNil())
 	pool := sync.Pool{
-		New: func() interface{} { return &simple.Ammo{} },
+		New: func() interface{} { return &simple.HttpAmmo{} },
 	}
 	b.Run("Decode", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
-			decodeAmmo(jsonDoc, &simple.Ammo{})
+			decodeAmmo(jsonDoc, &simple.HttpAmmo{})
 		}
 	})
 	b.Run("DecodeWithPool", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
-			h := pool.Get().(*simple.Ammo)
+			h := pool.Get().(*simple.HttpAmmo)
 			decodeAmmo(jsonDoc, h)
 			pool.Put(h)
 		}

@@ -47,7 +47,7 @@ func (p *Provider) start(ctx context.Context, ammoFile afero.File) error {
 		scanner := bufio.NewScanner(ammoFile)
 		for line := 1; scanner.Scan() && (p.Limit == 0 || ammoNum < p.Limit); line++ {
 			data := scanner.Bytes()
-			a, err := decodeAmmo(data, p.Pool.Get().(*simple.Ammo))
+			a, err := decodeAmmo(data, p.Pool.Get().(*simple.HttpAmmo))
 			if err != nil {
 				if p.Config.ContinueOnError == true {
 					a.Invalidate()
@@ -70,7 +70,7 @@ func (p *Provider) start(ctx context.Context, ammoFile afero.File) error {
 	return nil
 }
 
-func decodeAmmo(jsonDoc []byte, am *simple.Ammo) (*simple.Ammo, error) {
+func decodeAmmo(jsonDoc []byte, am *simple.HttpAmmo) (*simple.HttpAmmo, error) {
 	var data data
 	err := data.UnmarshalJSON(jsonDoc)
 	if err != nil {

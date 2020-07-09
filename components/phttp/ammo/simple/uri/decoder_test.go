@@ -15,24 +15,24 @@ import (
 )
 
 func newAmmoPool() *sync.Pool {
-	return &sync.Pool{New: func() interface{} { return &simple.Ammo{} }}
+	return &sync.Pool{New: func() interface{} { return &simple.HttpAmmo{} }}
 
 }
 
 var _ = Describe("Decoder", func() {
 	It("uri decode ctx cancel", func() {
 		ctx, cancel := context.WithCancel(context.Background())
-		decoder := newDecoder(ctx, make(chan *simple.Ammo), newAmmoPool())
+		decoder := newDecoder(ctx, make(chan *simple.HttpAmmo), newAmmoPool())
 		cancel()
 		err := decoder.Decode([]byte("/some/path"))
 		Expect(err).To(Equal(context.Canceled))
 	})
 	var (
-		ammoCh  chan *simple.Ammo
+		ammoCh  chan *simple.HttpAmmo
 		decoder *decoder
 	)
 	BeforeEach(func() {
-		ammoCh = make(chan *simple.Ammo, 10)
+		ammoCh = make(chan *simple.HttpAmmo, 10)
 		decoder = newDecoder(context.Background(), ammoCh, newAmmoPool())
 	})
 	DescribeTable("invalid input",
@@ -65,7 +65,7 @@ var _ = Describe("Decoder", func() {
 		Decode(line)
 		var am core.Ammo
 		Expect(ammoCh).To(Receive(&am))
-		sh, ok := am.(*simple.Ammo)
+		sh, ok := am.(*simple.HttpAmmo)
 		Expect(ok).To(BeTrue())
 		req, sample := sh.Request()
 		Expect(*req.URL).To(MatchFields(IgnoreExtras, Fields{
@@ -91,7 +91,7 @@ var _ = Describe("Decoder", func() {
 		Decode(line)
 		var am core.Ammo
 		Expect(ammoCh).To(Receive(&am))
-		sh, ok := am.(*simple.Ammo)
+		sh, ok := am.(*simple.HttpAmmo)
 		Expect(ok).To(BeTrue())
 		req, sample := sh.Request()
 		Expect(*req.URL).To(MatchFields(IgnoreExtras, Fields{

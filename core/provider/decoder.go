@@ -87,7 +87,7 @@ func (p *DecodeProvider) Run(ctx context.Context, deps core.ProviderDeps) (err e
 	// TODO(skipor):  Let's add optional Reset(io.Reader) method, that will allow efficient Decoder reset after every pass.
 	multipassReader := ioutil2.NewMultiPassReader(source, p.conf.Passes)
 	if source == multipassReader {
-		p.Log.Info("Ammo data source can't sought, so will be read only once")
+		p.Log.Info("HttpAmmo data source can't sought, so will be read only once")
 	}
 	decoder, err := p.newDecoder(deps, multipassReader)
 
@@ -99,7 +99,7 @@ func (p *DecodeProvider) Run(ctx context.Context, deps core.ProviderDeps) (err e
 		ammo := p.InputPool.Get()
 		err = decoder.Decode(ammo)
 		if err == io.EOF {
-			p.Log.Info("Ammo finished", zap.Int("decoded", ammoNum))
+			p.Log.Info("HttpAmmo finished", zap.Int("decoded", ammoNum))
 			return nil
 		}
 		if err != nil {
@@ -112,6 +112,6 @@ func (p *DecodeProvider) Run(ctx context.Context, deps core.ProviderDeps) (err e
 			return nil
 		}
 	}
-	p.Log.Info("Ammo limit is reached", zap.Int("decoded", ammoNum))
+	p.Log.Info("HttpAmmo limit is reached", zap.Int("decoded", ammoNum))
 	return nil
 }

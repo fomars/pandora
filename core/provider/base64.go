@@ -2,18 +2,17 @@ package provider
 
 import (
 	"bufio"
-	"bytes"
 	"context"
-	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 	"github.com/yandex/pandora/components/phttp/ammo/simple"
-	"github.com/yandex/pandora/components/phttp/ammo/simple/raw"
 	"github.com/yandex/pandora/core"
-	"io"
-	"net/http"
-	"strings"
-	"sync"
 )
+
+type Base64Ammo struct {
+	core.Ammo
+	simple.HttpAmmo
+	Body string
+}
 
 type Provider struct {
 	simple.Provider
@@ -24,10 +23,9 @@ type Config struct {
 	File string `validate:"required"`
 	// Limit limits total num of ammo. Unlimited if zero.
 	Limit int `validate:"min=0"`
-	// Redefine HTTP headers
-	Headers []string
 	ContinueOnError bool
 }
+
 
 func Base64Provider(fs afero.Fs, conf Config) *Provider {
 	var p Provider
@@ -40,10 +38,6 @@ func Base64Provider(fs afero.Fs, conf Config) *Provider {
 
 func (p *Provider) start(ctx context.Context, ammoFile afero.File) error {
 	var ammoNum, line int = 0, 0
-	decodedConfigHeaders, err := raw.DecodeHTTPConfigHeaders(p.Config.Headers)
-	if err != nil {
-		return err
-	}
 	scanner := bufio.NewScanner(ammoFile)
 
 	for scanner.Scan() {
@@ -52,16 +46,16 @@ func (p *Provider) start(ctx context.Context, ammoFile afero.File) error {
 			break
 		}
 		base64_data := scanner.Text()
-		request, err := ToRequest(base64_data, decodedConfigHeaders)
+		//request, err := ToRequest(base64_data, decodedConfigHeaders)
+		//if err != nil {
+		//	if p.Config.ContinueOnError == true {
+		//		ammo.Invalidate()
+		//	} else {
+		//		return errors.Wrapf(err, "failed to decode ammo at line: %v; data: %q", line, base64_data)
+		//	}
+		//}
 		ammo := p.Pool.Get().(*simple.Ammo)
-		ammo.Reset(request, "")  // TODO: implement tags
-		if err != nil {
-			if p.Config.ContinueOnError == true {
-				ammo.Invalidate()
-			} else {
-				return errors.Wrapf(err, "failed to decode ammo at line: %v; data: %q", line, base64_data)
-			}
-		}
+		ammo.Reset(base64_data, "")
 		select {
 		case p.Sink <- ammo:
 			ammoNum++
@@ -71,16 +65,4 @@ func (p *Provider) start(ctx context.Context, ammoFile afero.File) error {
 	}
 	ammoFile.Seek(0, 0)
 	return nil
-}
-
-func ToRequest(data string,headers []raw.Header) (req *http.Request, err error) {
-	uri := "http://" + data.Host + data.Uri
-	req, err = http.NewRequest(data.Method, uri, strings.NewReader(d.Body))
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	for k, v := range data.Headers {
-		req.Header.Set(k, v)
-	}
-	return
 }

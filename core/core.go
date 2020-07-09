@@ -21,16 +21,16 @@ import (
 	"go.uber.org/zap"
 )
 
-// Ammo is data required for one shot. SHOULD contains something that differs
+// HttpAmmo is data required for one shot. SHOULD contains something that differs
 // from one shot to another. Something like requested recourse indetificator, query params,
 // meta information helpful for future shooting analysis.
 // Information common for all shoots SHOULD be passed via Provider configuration.
 type Ammo interface{}
 
 // ResettableAmmo is ammo that can be efficiently reset before reuse.
-// Generic Provider (Provider that accepts undefined type of Ammo) SHOULD Reset Ammo before reuse
+// Generic Provider (Provider that accepts undefined type of HttpAmmo) SHOULD Reset HttpAmmo before reuse
 // if it implements ResettableAmmo.
-// Ammo that is not going to be used with generic Providers don't need to implement ResettableAmmo.
+// HttpAmmo that is not going to be used with generic Providers don't need to implement ResettableAmmo.
 type ResettableAmmo interface {
 	Ammo
 	Reset()
@@ -69,7 +69,7 @@ type ProviderDeps struct {
 //go:generate mockery -name=Gun -case=underscore -outpkg=coremock
 
 // Gun represents logic of making shoots sequentially.
-// A Gun is owned by only Instance that uses it for shooting in cycle: Acquire Ammo from Provider ->
+// A Gun is owned by only Instance that uses it for shooting in cycle: Acquire HttpAmmo from Provider ->
 // wait for next shoot schedule event -> Shoot with Gun.
 // Guns that also implements io.Closer will be Closed after Instance finish.
 // Rule of thumb: Guns that create resources which SHOULD be closed after Instance finish,
@@ -85,7 +85,7 @@ type Gun interface {
 	// and SHOULD be logged to deps.Log at zap.WarnLevel.
 	// For example, HTTP request fail SHOULD be Reported and logged,.
 	// In case of error, that SHOULD cancel shooting for all Instances Shoot MUST panic using error
-	// value describing the problem. That could be configuration error, unsupported Ammo type,
+	// value describing the problem. That could be configuration error, unsupported HttpAmmo type,
 	// situation when service under load doesn't support required protocol,
 	Shoot(ammo Ammo)
 
@@ -102,8 +102,8 @@ type GunDeps struct {
 	Log *zap.Logger
 	// Unique of Gun owning Instance. MAY be used for tagging Samples.
 	// Pool set's ids to Instances from 0, incrementing it after Instance Run.
-	// There is a race between Instances for Ammo Acquire, so it's not guaranteed, that
-	// Instance with lower InstanceId gets it's Ammo earlier.
+	// There is a race between Instances for HttpAmmo Acquire, so it's not guaranteed, that
+	// Instance with lower InstanceId gets it's HttpAmmo earlier.
 	InstanceId int
 	// TODO(skipor): https://github.com/yandex/pandora/issues/71
 	// Pass parallelism value. InstanceId MUST be -1 if parallelism > 1.
